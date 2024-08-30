@@ -1590,6 +1590,7 @@ these steps:
 
  <li><p>Return the result of decoding <var>bytes</var> with <var>codings</var> as explained in HTTP,
  if decoding does not result in an error, and failure otherwise. [[!HTTP]]
+ [[!HTTP-COMPRESSION-DICTIONARIES]]
 </ol>
 <!-- XXX https://github.com/whatwg/fetch/issues/716
          https://github.com/httpwg/http-core/issues/58 -->
