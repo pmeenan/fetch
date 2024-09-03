@@ -5816,8 +5816,14 @@ run these steps:
    <li><p>If <var>httpRequest</var>'s <a for=request>cache mode</a> is
    "<code>only-if-cached</code>", then return a <a>network error</a>.
 
-   <li><p>Let <var>forwardResponse</var> be the result of running <a>HTTP-network fetch</a> given
-   <var>httpFetchParams</var>, <var>includeCredentials</var>, and <var>isNewConnectionFetch</var>.
+   <li><p>If compression dictionary transport is supported, then <p>let
+    <var>forwardResponse</var> be the result of running
+    <a>HTTP-network-dictionary fetch</a> given <var>httpFetchParams</var>,
+    <var>includeCredentials</var>, and <var>isNewConnectionFetch</var>.
+    [[!HTTP-COMPRESSION-DICTIONARIES]]
+   <li>Otherwise, let <var>forwardResponse</var> be the result of running <a>HTTP-network fetch</a>
+    given <var>httpFetchParams</var>, <var>includeCredentials</var>, and
+    <var>isNewConnectionFetch</var>.
 
    <li><p>If <var>httpRequest</var>'s <a for=request>method</a> is <a>unsafe</a> and
    <var>forwardResponse</var>'s <a for=response>status</a> is in the range 200 to 399, inclusive,
@@ -5965,6 +5971,57 @@ run these steps:
 
  <li><p>If <var>isAuthenticationFetch</var> is true, then create an <a>authentication entry</a> for
  <var>request</var> and the given realm.
+
+ <li><p>Return <var>response</var>. <span class=note>Typically <var>response</var>'s
+ <a for=response>body</a>'s <a for=body>stream</a> is still being enqueued to after
+ returning.</span>
+</ol>
+</div>
+
+<h3 id=http-network-dictionary-fetch>HTTP-network-dictionary fetch</h3>
+
+<div algorithm>
+<p>To <dfn id=concept-http-network-dictionary-fetch>HTTP-network-dictionary fetch</dfn>, given a
+<a for=/>fetch params</a> <var>fetchParams</var>, an optional boolean <var>includeCredentials</var>
+(default false), and an optional boolean <var>forceNewConnection</var> (default false), run these
+steps:
+
+<ol>
+ <li>Let <var>request</var> be <var>fetchParams</var>'s <a for="fetch params">request</a>.
+
+ <li>Let <var>response</var> be null.
+
+ <li>Let <var>dictionary</var> be null.
+
+ <li>Let <var>httpRequest</var> be a <a for=request>clone</a> of <var>request</var>.
+
+ <li>Let <var>httpFetchParams</var> be a copy of <var>fetchParams</var>.
+
+ <li>Set <var>httpFetchParams</var>'s <a for="fetch params">request</a> to
+ <var>httpRequest</var>.
+
+ <li>Let <var>dictionaryPartitionKey</var> be the result of
+ <a for=request>determining the network partition key</a> given <var>request</var>.
+
+ <li>[TODO:pmeenan] See if dictionary use is allowed based on CORS mode.
+
+ <li>[TODO:pmeenan] Run dictionary matching algorithm.
+
+ <li>[TODO:pmeenan] If a dictionary match is found, add the dictionary details (hash, type and ID)
+  to <var>dictionaryFetchParams</var>.
+
+ <li><p>Let <var>httpResponse</var> be the result of running <a>HTTP-network fetch</a> given
+  <var>dictionaryFetchParams</var>, <var>includeCredentials</var>, and
+  <var>forceNewConnection</var>.
+
+ <li>[TODO:pmeenan] Verify CORS readability if dictionary encoding was used.
+
+ <li><p>[TODO:pmeenan] If the request is not a navigation request and a Use-As-Dictionary
+  response header is present and response is cors-readable:
+ <ol>
+  <li>Parse the Use-as-Dictionary header
+  <li>Store the dictionary (or a reference to it)
+ </ol>
 
  <li><p>Return <var>response</var>. <span class=note>Typically <var>response</var>'s
  <a for=response>body</a>'s <a for=body>stream</a> is still being enqueued to after
