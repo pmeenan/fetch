@@ -5816,14 +5816,9 @@ run these steps:
    <li><p>If <var>httpRequest</var>'s <a for=request>cache mode</a> is
    "<code>only-if-cached</code>", then return a <a>network error</a>.
 
-   <li><p>If compression dictionary transport is supported, then <p>let
-    <var>forwardResponse</var> be the result of running
+   <li><p>Let <var>forwardResponse</var> be the result of running
     <a>HTTP-network-dictionary fetch</a> given <var>httpFetchParams</var>,
     <var>includeCredentials</var>, and <var>isNewConnectionFetch</var>.
-    [[!HTTP-COMPRESSION-DICTIONARIES]]
-   <li>Otherwise, let <var>forwardResponse</var> be the result of running <a>HTTP-network fetch</a>
-    given <var>httpFetchParams</var>, <var>includeCredentials</var>, and
-    <var>isNewConnectionFetch</var>.
 
    <li><p>If <var>httpRequest</var>'s <a for=request>method</a> is <a>unsafe</a> and
    <var>forwardResponse</var>'s <a for=response>status</a> is in the range 200 to 399, inclusive,
